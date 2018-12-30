@@ -5,6 +5,7 @@ import Title from './Components/Title/Title'
 import friends from './friends.json'
 import './App.css';
 import Navbar from './Components/Navbar/navbar'
+import Modal from './Components/Modal/Modal'
 
 class App extends Component {
   state = {
@@ -12,7 +13,8 @@ class App extends Component {
     score: 0,
     topScore: 0,
     alreadyChosenIds: [],
-    correct: ""
+    correct: "",
+    show: false
   };
 
   //FISHER YATES SORTING FORMULA FOR SHUFFLING AN ARRAY
@@ -32,6 +34,14 @@ class App extends Component {
 
   }
 
+  showModal = () => {
+    this.setState({ show: true })
+
+  }
+
+  handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
+
+
   handleClick = id => {
 
     console.log(id)
@@ -40,32 +50,31 @@ class App extends Component {
       this.setState({ alreadyChosenIds: this.state.alreadyChosenIds.concat(id) });
     } else
       if (this.state.alreadyChosenIds.indexOf(id) >= 0) {
-        this.setState({correct: "Oops...Double Click! New Game!"})
-        this.handleEndOfGame();
+        this.setState({ correct: "NO!" }, () => this.showModal())
       }
   }
 
   handleScoring = () => {
     ////////******CHECK THE SCORING.************* */
-    this.setState({correct: "YES! Good job"})
-    const theScore =  this.state.score + 1 
-    this.setState({score: theScore})
+    this.setState({ correct: "Yes. Keep hodling" })
+    const theScore = this.state.score + 1
+    this.setState({ score: theScore })
     if (theScore > this.state.topScore) {
       this.setState({ topScore: theScore })
     } else if (this.state.score === 15) {
-    //  alert("WOW! WHAT A MEMORY!!")
+      //  alert("WOW! WHAT A MEMORY!!")
     }
     this.setState({ friends: this.shuffle(this.state.friends) })
   }
 
   handleEndOfGame = () => {
 
-  //  alert("I'm sorry. You clicked the same card twice. Please try again")
+    //  alert("I'm sorry. You clicked the same card twice. Please try again")
     this.setState({
       score: 0,
       topScore: this.state.topScore,
       alreadyChosenIds: [],
-      // correct: ''
+      correct: ''
     });
     this.setState({ friends: this.shuffle(this.state.friends) })
   };
@@ -73,28 +82,32 @@ class App extends Component {
 
   render() {
     return (
-      
-        <Wrapper>
-          <Navbar><span id="score"> Score: {this.state.score} </span>{"  "} <span id="topscore"> Top Score: {this.state.topScore}</span>{" "} <span id="correct"> Correct? {this.state.correct}{" "}</span></Navbar>
-          <Title>Memory Game!</Title>
 
-          <p>Directions: Click on any character. After you click, the characters will reshuffle. Don't click on a character you've already clicked on!</p>
-          {this.state.friends.map(friend => (
-            <FriendCard
-              id={friend.id}
-              key={friend.id}
-              name={friend.name}
-              image={friend.image}
-              handleClick={this.handleClick}
-              // handleScoring={this.handleScoring}
-              // handleEndOfGame={this.handleEndOfGame}
-        
-            />
-          ))}
+      <Wrapper>
+        <Navbar><span id="score"> Score: {this.state.score} </span>{"  "} <span id="topscore"> Top Score: {this.state.topScore}</span>{" "} <span id="correct"> Correct? {this.state.correct}{" "}</span></Navbar>
+        <Title><strong>meme-ory</strong></Title>
 
-                </Wrapper>
+        <p>Click on an image. After you click, the images will reshuffle. Don't click on the same image twice!</p>
+        {this.state.friends.map(friend => (
+          <FriendCard
+            id={friend.id}
+            key={friend.id}
+            name={friend.name}
+            image={friend.image}
+            handleClick={this.handleClick}
+          // handleScoring={this.handleScoring}
+          // handleEndOfGame={this.handleEndOfGame}
 
-  
+          />
+        ))}
+        <Modal
+          show={this.state.show}
+          handleClose={this.handleHideModal}>
+          You clicked {this.state.score} correctly...<br />
+          but then you double clicked.<br />
+          YOUR SCORE IS REKT.<br />
+        </Modal>
+      </Wrapper>
     );
   }
 }

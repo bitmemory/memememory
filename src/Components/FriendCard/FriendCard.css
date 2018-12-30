@@ -1,19 +1,19 @@
 .card {
     border-radius: 2px;
     height:240px;
-    border: #b27b66 3px solid;
+    border: #027fa2 3px solid;
     margin: 1rem;
     position: relative;
     box-shadow: 2px 2px 5px rgba(39, 31, 31, 0.51);
     text-align: left;
-    font-family: 'Fredericka the Great', cursive;
+    font-family: 'Ubuntu', sans-serif;
   }
   
   .card > .img-container {
     height:100%;
     overflow: hidden;
     text-align: center;
-    background:#fcd9c5;
+    background:#0af8f2;
   }
   .card > .img-container > img {
     width: 100%
