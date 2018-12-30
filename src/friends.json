@@ -7,7 +7,7 @@
   },
   {
     "id": 2,
-    "name": "Bitcoin Magazine ",
+    "name": "Bitcoin Magazine",
     "image": "/images/BitcoinMagazine.jpg",
     "alreadyChosenIds": false
   },
@@ -19,8 +19,8 @@
   },
   {
     "id": 4,
-    "name": "Professor Wiseman",
-    "image": "/images/professor-wiseman.jpg",
+    "name": "Paper Money",
+    "image": "/images/BackInMyDay.jpg",
     "alreadyChosenIds": false
   },
   {
