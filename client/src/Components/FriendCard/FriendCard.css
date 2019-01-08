@@ -1,14 +1,20 @@
 .card {
     border-radius: 2px;
-    height:240px;
+    height:230px;
     border: #027fa2 3px solid;
     margin: 1rem;
     position: relative;
     box-shadow: 2px 2px 5px rgba(39, 31, 31, 0.51);
     text-align: left;
     font-family: 'Ubuntu', sans-serif;
+    color: #030b3e;
   }
   
+  img {
+    height: 200px;
+    width: 200px;
+  }
+
   .card > .img-container {
     height:100%;
     overflow: hidden;
@@ -23,11 +29,6 @@
     padding-left: 1rem;
     padding-right: 1rem;
     font-size: 15px;
-  }
-
-  .card > .content {
-    margin-top: 10px;
-    color: #e83228
   }
 
   .card:chosen {

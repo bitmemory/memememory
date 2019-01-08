@@ -14,7 +14,7 @@
   {
     "id": 3,
     "name": "Bitcoin White Paper",
-    "image": "/images/Bitcoin Whitepaper.jpg",
+    "image": "/images/BitcoinWhitepaper.jpg",
     "alreadyChosenIds": false
   },
   {
@@ -80,13 +80,19 @@
   {
     "id": 14,
     "name": "Lightning Nodes",
-    "image": "/images/Lightning Nodes.jpg",
+    "image": "/images/LightningNodes.jpg",
     "alreadyChosenIds": false
   },
   {
     "id": 15,
     "name": "The Bart",
     "image": "/images/Bart.jpg",
+    "alreadyChosenIds": false
+  },
+  {
+    "id": 16,
+    "name": "CryptoSprings",
+    "image": "/images/cryptosprings.jpg",
     "alreadyChosenIds": false
   }
 ]
