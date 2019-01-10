@@ -9,6 +9,8 @@ import Modal from './Components/Modal/Modal'
 import Column from './Components/column'
 import Row from './Components/row'
 import Container from './Components/container'
+import axios from 'axios'
+import QR from './Components/Lightning'
 
 class App extends Component {
   state = {
@@ -19,7 +21,11 @@ class App extends Component {
     correct: "",
     show: false,
     showLightning: false,
-    showWin: false
+    showWin: false,
+    showQR: false,
+    charge: '',
+    showYes: true,
+    amount: 0
   };
 
   //FISHER YATES SORTING FORMULA FOR SHUFFLING AN ARRAY
@@ -42,12 +48,22 @@ class App extends Component {
   showModal = () => this.setState({ show: true })
 
   showLightning = () => this.setState({ showLightning: true })
-  
+
   handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
 
-  getLightning = () =>{
-return null
+  componentDidMount() {
+    axios.get('/api/charge')
+      .then(data => {
+        this.setState({ charge: `'${data.data.body.payment_request}'` })
+        this.setState({ amount: data.data.body.amount })
+        console.log(data.data)
+        console.log(this.state.charge)
+        console.log(data.data.body.amount)
+      })
+      .catch(err => console.log(err))
   }
+
+  getQR = () => this.setState({ showQR: true, showYes: false })
 
   handleClick = id => {
 
@@ -67,8 +83,11 @@ return null
     this.setState({ score: theScore })
     if (theScore > this.state.topScore) {
       this.setState({ topScore: theScore })
-    } if (this.state.score === 4) {
-      this.showLightning()
+      // if (this.state.score === 1) {
+      //   this.getLightning() }
+      if (this.state.score === 4) {
+        this.showLightning()
+      }
     } if (this.state.score === 16) {
       this.showWin()
     }
@@ -122,11 +141,20 @@ return null
 
             <Modal
               show={this.state.showLightning}>
-              Continue playing?<br />
-             <button onClick={this.getLightning}>play</button>
+              {this.state.showYes ?
+                <span>
+                  <h1>Continue playing?</h1><br />
+                  <button onClick={this.getQR}>Yes!</button></span> : null}
+              {this.state.showQR ? <span> <QR
+                value={this.state.charge} />
+         
+                <h1>Amount: {this.state.amount} satoshi</h1>
+                <h1>Awesome! Scan here to continue</h1>
+              </span>
+                : null}
             </Modal>
 
-            
+
             <Modal
               show={this.state.showWin}>
               YOU WIN!!!<br />
