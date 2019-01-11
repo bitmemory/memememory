@@ -10,7 +10,9 @@ import Column from './Components/column'
 import Row from './Components/row'
 import Container from './Components/container'
 import axios from 'axios'
-import QR from './Components/Lightning'
+import Confetti from './Components/Confetti'
+const QRCode = require('qrcode.react');
+
 
 class App extends Component {
   state = {
@@ -25,7 +27,11 @@ class App extends Component {
     showQR: false,
     charge: '',
     showYes: true,
-    amount: 0
+    amount: 0,
+    charge_id: '',
+    paid: false,
+    continuePlay: false,
+    exit: false
   };
 
   //FISHER YATES SORTING FORMULA FOR SHUFFLING AN ARRAY
@@ -45,25 +51,48 @@ class App extends Component {
 
   }
 
+  componentWillUpdate() {
+    axios.get('/api/charge/' + this.state.charge_id)
+    .then(data => {
+      this.setState({ paid: data.data.body.paid })
+      console.log(data.data)  
+    })
+  }
+
   showModal = () => this.setState({ show: true })
 
   showLightning = () => this.setState({ showLightning: true })
 
   handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
 
-  componentDidMount() {
+  getLightning = () => {
     axios.get('/api/charge')
       .then(data => {
-        this.setState({ charge: `'${data.data.body.payment_request}'` })
+        this.setState({ charge: data.data.body.payment_request })
         this.setState({ amount: data.data.body.amount })
+        this.setState({ charge_id: data.data.body.id})
         console.log(data.data)
         console.log(this.state.charge)
-        console.log(data.data.body.amount)
+        console.log(this.state.charge_id)
+        console.log(this.state.amount)
       })
       .catch(err => console.log(err))
   }
 
   getQR = () => this.setState({ showQR: true, showYes: false })
+
+  // chargePlayer = () => {
+  //   axios.get('/api/charge/' + this.state.charge_id)
+  //     .then(data => {
+  //       this.setState({ paid: data.data.body.paid }, () => this.continueGame())
+  //     })
+  // }
+
+  // continueGame = () => {
+  //   if (this.state.paid === true) {
+  //     this.setState({continueGame: true})
+  //   } else {this.setState({exit: true})}
+  // }
 
   handleClick = id => {
 
@@ -83,8 +112,9 @@ class App extends Component {
     this.setState({ score: theScore })
     if (theScore > this.state.topScore) {
       this.setState({ topScore: theScore })
-      // if (this.state.score === 1) {
-      //   this.getLightning() }
+      if (this.state.score === 0) {
+        this.getLightning()
+      }
       if (this.state.score === 4) {
         this.showLightning()
       }
@@ -95,8 +125,6 @@ class App extends Component {
   }
 
   handleEndOfGame = () => {
-
-    //  alert("I'm sorry. You clicked the same card twice. Please try again")
     this.setState({
       score: 0,
       topScore: this.state.topScore,
@@ -145,26 +173,49 @@ class App extends Component {
                 <span>
                   <h1>Continue playing?</h1><br />
                   <button onClick={this.getQR}>Yes!</button></span> : null}
-              {this.state.showQR ? <span> <QR
-                value={this.state.charge} />
-         
-                <h1>Amount: {this.state.amount} satoshi</h1>
-                <h1>Awesome! Scan here to continue</h1>
-              </span>
+              {this.state.showQR ?
+                <span>
+                  <QRCode value={this.state.charge}
+                    size={128}
+                    bgColor={"#ffffff"}
+                    fgColor={"#000000"}
+                    level={"H"}
+                    includeMargin={false}
+                    renderAs={"svg"} />
+                  <h1>Amount: {this.state.amount} satoshi</h1>
+                  <h1>Scan here to continue</h1>
+                  {/* <h1>After payment, click below to continue</h1>
+                  <button className="standard-btn" id='modal' onClick={this.chargePlayer}>Paid</button> */}
+                </span>
                 : null}
+              {this.state.paid ?
+                <span>
+                  <h1>Thanks for your payment!</h1>
+                  <button className="standard-btn" id='modal' onClick={this.handleHideModal}>Continue Playing</button>
+                </span>
+                : null }
+                {/* {this.state.exit ?
+                <span>
+                  <h1>Bummer...no Payment received</h1>
+                  <button className="standard-btn" id='modal' href='https://bitmemory.herokuapp.com/'>Exit</button>
+                </span>
+                : null } */}
             </Modal>
-
-
+  
+  
             <Modal
-              show={this.state.showWin}>
-              YOU WIN!!!<br />
+                show={this.state.showWin}>
+                <Confetti />
+                YOU MADE IT TO THE MOON!<br />
+                Connect with me on Lightning here:
+  
               <button className="standard-btn" id='modal' onClick={this.handleHideModal}>Play again?</button>
-            </Modal>
+              </Modal>
           </Row>
         </Container>
       </Wrapper>
-    );
-  }
-}
-
+        );
+      }
+    }
+    
 export default App;
