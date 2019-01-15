@@ -1,9 +1,13 @@
+const path = require("path");
+const router = require("express").Router();
+const apiRoutes = require("./api");
 
-// const fs = require('fs');
-// const path = require('path');
+// API Routes
+router.use("/api", apiRoutes);
 
-// module.exports = (app) => {
-// 	fs.readdirSync('routes/').forEach((file) => {
-// 		require('./lightning')(app);
-// 	})
-// }
+// If no API routes are hit, send the React app
+router.use(function(req, res) {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
+
+module.exports = router;

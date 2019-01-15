@@ -11,8 +11,9 @@ import Row from './Components/row'
 import Container from './Components/container'
 import axios from 'axios'
 import Confetti from './Components/Confetti'
-const QRCode = require('qrcode.react');
+import API from './utils/API'
 
+const QRCode = require('qrcode.react');
 
 class App extends Component {
   state = {
@@ -51,13 +52,13 @@ class App extends Component {
 
   }
 
-  componentWillUpdate() {
-    axios.get('/api/charge/' + this.state.charge_id)
-    .then(data => {
-      this.setState({ paid: data.data.body.paid })
-      console.log(data.data)  
-    })
-  }
+  // componentWillReceiveProps() {
+  //   axios.get('/api/charge/' + this.state.charge_id)
+  //   .then(data => {
+  //     this.setState({ paid: data.data.body.paid })
+  //     console.log(data.data)  
+  //   })
+  // }
 
   showModal = () => this.setState({ show: true })
 
@@ -66,7 +67,7 @@ class App extends Component {
   handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
 
   getLightning = () => {
-    axios.get('/api/charge')
+    API.getStrike()
       .then(data => {
         this.setState({ charge: data.data.body.payment_request })
         this.setState({ amount: data.data.body.amount })
@@ -81,18 +82,20 @@ class App extends Component {
 
   getQR = () => this.setState({ showQR: true, showYes: false })
 
-  // chargePlayer = () => {
-  //   axios.get('/api/charge/' + this.state.charge_id)
-  //     .then(data => {
-  //       this.setState({ paid: data.data.body.paid }, () => this.continueGame())
-  //     })
-  // }
+  chargePlayer = () => {
+    axios.get('/api/charge/' + this.state.charge_id)
+      .then(data => {
+        if (data.data.body.paid === true) { 
+        this.setState({ paid: true }, () => this.continueGame())
+        }
+      })
+  }
 
-  // continueGame = () => {
-  //   if (this.state.paid === true) {
-  //     this.setState({continueGame: true})
-  //   } else {this.setState({exit: true})}
-  // }
+  continueGame = () => {
+    if (this.state.paid === true) {
+      this.setState({continueGame: true})
+    } else {this.setState({exit: true})}
+  }
 
   handleClick = id => {
 
@@ -182,10 +185,14 @@ class App extends Component {
                     level={"H"}
                     includeMargin={false}
                     renderAs={"svg"} />
-                  <h1>Amount: {this.state.amount} satoshi</h1>
-                  <h1>Scan here to continue</h1>
-                  {/* <h1>After payment, click below to continue</h1>
-                  <button className="standard-btn" id='modal' onClick={this.chargePlayer}>Paid</button> */}
+                  <h1 className='charge'>Amount: {this.state.amount} satoshi</h1>
+                  <h1 className='charge'>Scan to continue</h1>
+                  <h1 className='charge'>No mobile device? Copy code below </h1>
+                  <p><strong>Payment Request</strong></p>
+                  <div id='pr'>
+                  <p id='amount'>{this.state.charge}</p>
+                  </div>
+                  <button className="standard-btn" id='modal' onClick={this.chargePlayer}>Paid</button>
                 </span>
                 : null}
               {this.state.paid ?

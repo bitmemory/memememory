@@ -11,3 +11,15 @@ p {
     font-size: 30px;
 }
 
+.charge {
+    font-size: 15px;
+}
+
+#pr {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+#amount {
+    font-size: 12px;
+}
