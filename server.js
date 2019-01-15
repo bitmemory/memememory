@@ -1,5 +1,5 @@
 const express = require("express");
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const path = require("path");
 const routes = require('./routes')
 require('dotenv').config();
@@ -7,18 +7,18 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 
-  app.get('*', (request, response) => {
+  app.get('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   })
 
-  app.post('*', (request, response) => {
+  app.post('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   })
 

@@ -66,7 +66,7 @@ class App extends Component {
 
   handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
 
-  getLightning = () => {
+  componentDidMount() {
     API.getStrike()
       .then(data => {
         this.setState({ charge: data.data.body.payment_request })
@@ -115,9 +115,9 @@ class App extends Component {
     this.setState({ score: theScore })
     if (theScore > this.state.topScore) {
       this.setState({ topScore: theScore })
-      if (this.state.score === 0) {
-        this.getLightning()
-      }
+      // if (this.state.score === 0) {
+      //   this.getLightning()
+      // }
       if (this.state.score === 4) {
         this.showLightning()
       }
