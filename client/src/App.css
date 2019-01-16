@@ -12,14 +12,20 @@ p {
 }
 
 .charge {
+    font-size: 20px;
+}
+
+.charge2 {
     font-size: 15px;
 }
 
 #pr {
-    margin-left: 50px;
-    margin-right: 50px;
+width: 330px;
+margin-left: auto;
+margin-right: auto;
+word-wrap: break-word;
 }
 
 #amount {
-    font-size: 12px;
-}
+    font-size: 10px;
+ }

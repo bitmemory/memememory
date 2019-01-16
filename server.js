@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const routes = require('./routes')
+// const hook = require('./hook')
+require('dotenv').config()
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -14,9 +16,13 @@ app.use(express.json());
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
   require('dotenv').config()
-  app.get('/', (request, response) => {
+  app.get('*', (request, response) => {
     response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   })
+
+  // app.get('/:id', (request, response) => {
+  //   response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  // })
 
   app.post('/', (request, response) => {
     response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
@@ -24,6 +30,7 @@ if (process.env.NODE_ENV === "production") {
 
 }
 
+// app.use(hook)
 app.use(routes)
 // Add routes, both API and view
 // require('./routes/api/lightning')(app);

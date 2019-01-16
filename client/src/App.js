@@ -9,7 +9,7 @@ import Modal from './Components/Modal/Modal'
 import Column from './Components/column'
 import Row from './Components/row'
 import Container from './Components/container'
-import axios from 'axios'
+// import axios from 'axios'
 import Confetti from './Components/Confetti'
 import API from './utils/API'
 
@@ -47,18 +47,9 @@ class App extends Component {
       friendArray[i] = friendArray[j]
       friendArray[j] = temp
     }
-    // console.log("NEW ARRAY")
     return friendArray
 
   }
-
-  // componentWillReceiveProps() {
-  //   axios.get('/api/charge/' + this.state.charge_id)
-  //   .then(data => {
-  //     this.setState({ paid: data.data.body.paid })
-  //     console.log(data.data)  
-  //   })
-  // }
 
   showModal = () => this.setState({ show: true })
 
@@ -83,18 +74,18 @@ class App extends Component {
   getQR = () => this.setState({ showQR: true, showYes: false })
 
   chargePlayer = () => {
-    axios.get('/api/charge/' + this.state.charge_id)
+    API.getConfirm(this.state.charge_id)
       .then(data => {
         if (data.data.body.paid === true) { 
+        this.setState({showQR: false})  
         this.setState({ paid: true }, () => this.continueGame())
-        }
+        } else {this.setState({exit: true})}
       })
-  }
-
-  continueGame = () => {
-    if (this.state.paid === true) {
-      this.setState({continueGame: true})
-    } else {this.setState({exit: true})}
+      .catch(err => {
+        console.log(err)
+        this.setState({showQR: false})  
+      this.setState({exit: true})
+      })
   }
 
   handleClick = id => {
@@ -137,6 +128,10 @@ class App extends Component {
     this.setState({ friends: this.shuffle(this.state.friends) })
   };
 
+  exitApp = () => {
+    window.location.href = 'https://bitmemory.herokuapp.com' 
+  }
+
 
   render() {
     return (
@@ -156,8 +151,6 @@ class App extends Component {
                   name={friend.name}
                   image={friend.image}
                   handleClick={this.handleClick}
-                // handleScoring={this.handleScoring}
-                // handleEndOfGame={this.handleEndOfGame}
 
                 />
               </Column>
@@ -185,10 +178,10 @@ class App extends Component {
                     level={"H"}
                     includeMargin={false}
                     renderAs={"svg"} />
-                  <h1 className='charge'>Amount: {this.state.amount} satoshi</h1>
-                  <h1 className='charge'>Scan to continue</h1>
-                  <h1 className='charge'>No mobile device? Copy code below </h1>
-                  <p><strong>Payment Request</strong></p>
+                  <h1 className='charge'><strong>Amount: {this.state.amount} satoshi</strong></h1>
+                  <h1 className='charge2'>Scan to continue and press 'paid' when done.</h1>
+                  <hr />
+                  <h1 className='charge2'>No mobile device? Copy payment request below! </h1>
                   <div id='pr'>
                   <p id='amount'>{this.state.charge}</p>
                   </div>
@@ -201,12 +194,12 @@ class App extends Component {
                   <button className="standard-btn" id='modal' onClick={this.handleHideModal}>Continue Playing</button>
                 </span>
                 : null }
-                {/* {this.state.exit ?
+                {this.state.exit ?
                 <span>
                   <h1>Bummer...no Payment received</h1>
-                  <button className="standard-btn" id='modal' href='https://bitmemory.herokuapp.com/'>Exit</button>
+                  <button className="standard-btn" id='modal' onClick={this.exitApp}>Exit</button>
                 </span>
-                : null } */}
+                : null }
             </Modal>
   
   
