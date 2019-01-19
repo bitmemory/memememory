@@ -76,9 +76,10 @@ class App extends Component {
   chargePlayer = () => {
     API.getConfirm(this.state.charge_id)
       .then(data => {
+        console.log(data)
         if (data.data.body.paid === true) { 
         this.setState({showQR: false})  
-        this.setState({ paid: true }, () => this.continueGame())
+        this.setState({ paid: true })
         } else {this.setState({exit: true})}
       })
       .catch(err => {
@@ -127,6 +128,8 @@ class App extends Component {
     });
     this.setState({ friends: this.shuffle(this.state.friends) })
   };
+
+  handleHideModal = () => this.setState({ show: false })
 
   exitApp = () => {
     window.location.href = 'https://bitmemory.herokuapp.com' 

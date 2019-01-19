@@ -4,7 +4,7 @@ export default {
     getStrike: () => {
         return axios.post('/api/charge')
     },
-    getConfirm: () => {
-        return axios.get('/api/charge/authenticate')
+    getConfirm: (id) => {
+        return axios.post('/api/charge/' + id)
     }
 }

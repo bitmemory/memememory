@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const routes = require('./routes')
-// const hook = require('./hook')
 require('dotenv').config()
 
 const app = express();
@@ -30,10 +29,7 @@ if (process.env.NODE_ENV === "production") {
 
 }
 
-// app.use(hook)
 app.use(routes)
-// Add routes, both API and view
-// require('./routes/api/lightning')(app);
 
 // Start the API server
 app.listen(PORT, function () {
