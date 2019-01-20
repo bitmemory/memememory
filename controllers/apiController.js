@@ -54,7 +54,6 @@ module.exports = {
         };
 
         request(options, function (error, response, body) {
-            console.log(options)
             console.log(`Response is: ${JSON.stringify(response)}`)
             if (error) { throw new Error(error) };
             console.log(`Error is: ${error}

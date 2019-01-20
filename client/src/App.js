@@ -55,7 +55,11 @@ class App extends Component {
 
   showLightning = () => this.setState({ showLightning: true })
 
+  handleHideThis = () => this.setState({ showLightning: false })
+
   handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
+
+  handleHideWin = () => this.setState({showWin: false}, () => this.exitApp())
 
   componentDidMount() {
     API.getStrike()
@@ -107,14 +111,11 @@ class App extends Component {
     this.setState({ score: theScore })
     if (theScore > this.state.topScore) {
       this.setState({ topScore: theScore })
-      // if (this.state.score === 0) {
-      //   this.getLightning()
-      // }
       if (this.state.score === 4) {
         this.showLightning()
       }
-    } if (this.state.score === 16) {
-      this.showWin()
+    } if (this.state.score === 15) {
+     this.setState({showWin: true})
     }
     this.setState({ friends: this.shuffle(this.state.friends) })
   }
@@ -128,8 +129,6 @@ class App extends Component {
     });
     this.setState({ friends: this.shuffle(this.state.friends) })
   };
-
-  handleHideModal = () => this.setState({ show: false })
 
   exitApp = () => {
     window.location.href = 'https://bitmemory.herokuapp.com' 
@@ -194,7 +193,7 @@ class App extends Component {
               {this.state.paid ?
                 <span>
                   <h1>Thanks for your payment!</h1>
-                  <button className="standard-btn" id='modal' onClick={this.handleHideModal}>Continue Playing</button>
+                  <button className="standard-btn" id='modal' onClick={this.handleHideThis}>Continue Playing</button>
                 </span>
                 : null }
                 {this.state.exit ?
@@ -210,9 +209,9 @@ class App extends Component {
                 show={this.state.showWin}>
                 <Confetti />
                 YOU MADE IT TO THE MOON!<br />
-                Connect with me on Lightning here:
+                Connect with me on Lightning here:<br />
   
-              <button className="standard-btn" id='modal' onClick={this.handleHideModal}>Play again?</button>
+              <button className="standard-btn" id='modal' onClick={this.handleHideWin}>Play again?</button>
               </Modal>
           </Row>
         </Container>
