@@ -29,3 +29,22 @@ word-wrap: break-word;
 #amount {
     font-size: 10px;
  }
+
+#connect {
+    font-size: 20px;
+}
+
+#modal, button.standard-btn {
+    font-family: 'Ubuntu', sans-serif;
+    color: white !important;
+    background-color:#027fa2 !important;
+    padding: 10px !important;
+    border-radius: 2px !important;
+    border: none !important;
+    font-size: 15px !important;
+  }
+
+i.fas.fa-bolt {
+    margin-right: 15px;
+}
+

@@ -9,7 +9,7 @@ import Modal from './Components/Modal/Modal'
 import Column from './Components/column'
 import Row from './Components/row'
 import Container from './Components/container'
-// import axios from 'axios'
+import Clipboard from 'react-clipboard.js';
 import Confetti from './Components/Confetti'
 import API from './utils/API'
 
@@ -59,18 +59,14 @@ class App extends Component {
 
   handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
 
-  handleHideWin = () => this.setState({showWin: false}, () => this.exitApp())
+  handleHideWin = () => this.setState({ showWin: false }, () => this.exitApp())
 
   componentDidMount() {
     API.getStrike()
       .then(data => {
         this.setState({ charge: data.data.body.payment_request })
         this.setState({ amount: data.data.body.amount })
-        this.setState({ charge_id: data.data.body.id})
-        console.log(data.data)
-        console.log(this.state.charge)
-        console.log(this.state.charge_id)
-        console.log(this.state.amount)
+        this.setState({ charge_id: data.data.body.id })
       })
       .catch(err => console.log(err))
   }
@@ -80,16 +76,15 @@ class App extends Component {
   chargePlayer = () => {
     API.getConfirm(this.state.charge_id)
       .then(data => {
-        console.log(data)
-        if (data.data.body.paid === true) { 
-        this.setState({showQR: false})  
-        this.setState({ paid: true })
-        } else {this.setState({exit: true})}
+        if (data.data.body.paid === true) {
+          this.setState({ showQR: false })
+          this.setState({ paid: true })
+        } else { this.setState({ exit: true }) }
       })
       .catch(err => {
         console.log(err)
-        this.setState({showQR: false})  
-      this.setState({exit: true})
+        this.setState({ showQR: false })
+        this.setState({ exit: true })
       })
   }
 
@@ -115,7 +110,7 @@ class App extends Component {
         this.showLightning()
       }
     } if (this.state.score === 15) {
-     this.setState({showWin: true})
+      this.setState({ showWin: true })
     }
     this.setState({ friends: this.shuffle(this.state.friends) })
   }
@@ -131,9 +126,12 @@ class App extends Component {
   };
 
   exitApp = () => {
-    window.location.href = 'https://bitmemory.herokuapp.com' 
+    window.location.href = 'https://bitmemory.herokuapp.com'
   }
 
+  getText() {
+    return "03a8355790b89f4d96963019eb9413b9a2c884691837ac976bacfe25a5212892d7@99.71.113.187:9735";
+  }
 
   render() {
     return (
@@ -170,7 +168,7 @@ class App extends Component {
               {this.state.showYes ?
                 <span>
                   <h1>Continue playing?</h1><br />
-                  <button onClick={this.getQR}>Yes!</button></span> : null}
+                  <button id='modal' onClick={this.getQR}>Yes!</button></span> : null}
               {this.state.showQR ?
                 <span>
                   <QRCode value={this.state.charge}
@@ -185,7 +183,7 @@ class App extends Component {
                   <hr />
                   <h1 className='charge2'>No mobile device? Copy payment request below! </h1>
                   <div id='pr'>
-                  <p id='amount'>{this.state.charge}</p>
+                    <p id='amount'>{this.state.charge}</p>
                   </div>
                   <button className="standard-btn" id='modal' onClick={this.chargePlayer}>Paid</button>
                 </span>
@@ -195,29 +193,31 @@ class App extends Component {
                   <h1>Thanks for your payment!</h1>
                   <button className="standard-btn" id='modal' onClick={this.handleHideThis}>Continue Playing</button>
                 </span>
-                : null }
-                {this.state.exit ?
+                : null}
+              {this.state.exit ?
                 <span>
                   <h1>Bummer...no Payment received</h1>
                   <button className="standard-btn" id='modal' onClick={this.exitApp}>Exit</button>
                 </span>
-                : null }
+                : null}
             </Modal>
-  
-  
+
+
             <Modal
-                show={this.state.showWin}>
-                <Confetti />
-                YOU MADE IT TO THE MOON!<br />
-                Connect with me on Lightning here:<br />
-  
+              show={this.state.showWin}>
+              <Confetti />
+              YOU MADE IT TO THE MOON!<br />
+              <p id='connect'>Connect with the creators of BTC Meme-ory on Lightning {'  '}<i className="fas fa-bolt"></i>{'  '}
+                <Clipboard option-text={this.getText} className="standard-btn" id='modal' >
+                  <i className="fas fa-paste"></i> Connection Code </Clipboard></p>
+
               <button className="standard-btn" id='modal' onClick={this.handleHideWin}>Play again?</button>
-              </Modal>
+            </Modal>
           </Row>
         </Container>
       </Wrapper>
-        );
-      }
-    }
-    
+    );
+  }
+}
+
 export default App;
