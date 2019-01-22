@@ -82,7 +82,6 @@ class App extends Component {
   chargePlayer = () => {
     API.getConfirm(this.state.charge_id)
       .then(data => {
-        console.log(this.state.paid)
         if (data.data.body.paid === true) {
           this.setState({ showQR: false })
           this.setState({ paid: true }, () => this.handleHideThis())
@@ -233,7 +232,7 @@ class App extends Component {
             </Modal>
 
           </Row>
-          <footer>Version 1.0<i className="fab fa-github"></i></footer>
+          <footer>Version 1.0< a href='https://github.com/bitmemory'><i className="fab fa-github"></i></a></footer>
         </Container>
       </Wrapper>
     );
