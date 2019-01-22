@@ -10,3 +10,11 @@
     margin-left: 50px;
     margin-right: 50px;
   }
+
+  @media only screen and (max-width: 768px) {
+    .wrapper { 
+margin-left: 50 auto;
+margin-right: 50 auto;
+padding: 0px;
+    }
+  }

@@ -12,6 +12,7 @@ import Container from './Components/container'
 import Clipboard from 'react-clipboard.js';
 import Confetti from './Components/Confetti'
 import API from './utils/API'
+import ReactTooltip from 'react-tooltip'
 
 const QRCode = require('qrcode.react');
 
@@ -32,7 +33,8 @@ class App extends Component {
     charge_id: '',
     paid: false,
     continuePlay: false,
-    exit: false
+    exit: false,
+    error: false
   };
 
   //FISHER YATES SORTING FORMULA FOR SHUFFLING AN ARRAY
@@ -53,11 +55,15 @@ class App extends Component {
 
   showModal = () => this.setState({ show: true })
 
-  showLightning = () => this.setState({ showLightning: true })
+  showLightning = () => {
+    if (this.state.charge === '') {
+      this.setState({ error: true })
+    } else { this.setState({ showLightning: true }) }
+  }
 
   handleHideThis = () => this.setState({ showLightning: false })
 
-  handleHideModal = () => this.setState({ show: false }, () => this.handleEndOfGame())
+  handleHideModal = () => this.setState({ show: false, error: false }, () => this.handleEndOfGame())
 
   handleHideWin = () => this.setState({ showWin: false }, () => this.exitApp())
 
@@ -76,10 +82,11 @@ class App extends Component {
   chargePlayer = () => {
     API.getConfirm(this.state.charge_id)
       .then(data => {
+        console.log(this.state.paid)
         if (data.data.body.paid === true) {
           this.setState({ showQR: false })
-          this.setState({ paid: true })
-        } else { this.setState({ exit: true }) }
+          this.setState({ paid: true }, () => this.handleHideThis())
+        } else { this.setState({ exit: true, showQR: false }) }
       })
       .catch(err => {
         console.log(err)
@@ -133,6 +140,11 @@ class App extends Component {
     return "03a8355790b89f4d96963019eb9413b9a2c884691837ac976bacfe25a5212892d7@99.71.113.187:9735";
   }
 
+  getPaymentRequest = () => {
+    const charge = this.state.charge
+    return charge
+  }
+
   render() {
     return (
 
@@ -160,14 +172,24 @@ class App extends Component {
               You clicked {this.state.score} correctly...<br />
               but then you double clicked.<br />
               YOUR SCORE IS REKT.<br />
+
               <button className="standard-btn" id='modal' onClick={this.handleHideModal}>Play again?</button>
             </Modal>
+
+            <Modal
+              show={this.state.error}>
+              <h1>We apologize!</h1><br /> 
+              <h1>Meme-ory is currently not working.</h1>
+              <h1>Please try again later</h1>
+              <button className="standard-btn" id='modal' onClick={this.handleHideModal}>Play again?</button>
+            </Modal>
+
 
             <Modal
               show={this.state.showLightning}>
               {this.state.showYes ?
                 <span>
-                  <h1>Continue playing?</h1><br />
+                  <h1>Continue playing?</h1>
                   <button id='modal' onClick={this.getQR}>Yes!</button></span> : null}
               {this.state.showQR ?
                 <span>
@@ -179,19 +201,14 @@ class App extends Component {
                     includeMargin={false}
                     renderAs={"svg"} />
                   <h1 className='charge'><strong>Amount: {this.state.amount} satoshi</strong></h1>
-                  <h1 className='charge2'>Scan to continue and press 'paid' when done.</h1>
                   <hr />
                   <h1 className='charge2'>No mobile device? Copy payment request below! </h1>
-                  <div id='pr'>
-                    <p id='amount'>{this.state.charge}</p>
-                  </div>
-                  <button className="standard-btn" id='modal' onClick={this.chargePlayer}>Paid</button>
-                </span>
-                : null}
-              {this.state.paid ?
-                <span>
-                  <h1>Thanks for your payment!</h1>
-                  <button className="standard-btn" id='modal' onClick={this.handleHideThis}>Continue Playing</button>
+                  <textarea id="bar">{this.state.charge}</textarea><br />
+                  <Clipboard option-text={this.getPaymentRequest} data-tip="Copied" data-event='click' className="standard-btn" id='modal' >
+                    Copy Payment Request</Clipboard><br />
+                  <ReactTooltip />
+                  <hr />
+                  <h1 className='charge'><strong>After you have paid, click here to continue your game<i className="fas fa-arrow-circle-right"></i></strong><button className="standard-btn" id='modal' onClick={this.chargePlayer}>Continue Game</button></h1>
                 </span>
                 : null}
               {this.state.exit ?
@@ -208,12 +225,15 @@ class App extends Component {
               <Confetti />
               YOU MADE IT TO THE MOON!<br />
               <p id='connect'>Connect with the creators of BTC Meme-ory on Lightning {'  '}<i className="fas fa-bolt"></i>{'  '}
-                <Clipboard option-text={this.getText} className="standard-btn" id='modal' >
+                <Clipboard option-text={this.getText} data-tip="Copied" data-event='click' className="standard-btn" id='modal' >
                   <i className="fas fa-paste"></i> Connection Code </Clipboard></p>
+              <ReactTooltip />
 
               <button className="standard-btn" id='modal' onClick={this.handleHideWin}>Play again?</button>
             </Modal>
+
           </Row>
+          <footer>Version 1.0<i className="fab fa-github"></i></footer>
         </Container>
       </Wrapper>
     );

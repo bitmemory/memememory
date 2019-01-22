@@ -6,9 +6,12 @@ p {
 
 #score, #correct, #topscore {
     color: white;
-    margin-left: 60px;
     font-family: 'Ubuntu', sans-serif;
     font-size: 30px;
+}
+
+#correct, #topscore {
+    margin-left: 60px;
 }
 
 .charge {
@@ -30,6 +33,14 @@ word-wrap: break-word;
     font-size: 10px;
  }
 
+ #bar {
+     font-size: 12px;
+     width: 330px;
+     border-radius: 2px;
+     height: 120px;
+     padding: 15px;
+ }
+
 #connect {
     font-size: 20px;
 }
@@ -47,4 +58,20 @@ word-wrap: break-word;
 i.fas.fa-bolt {
     margin-right: 15px;
 }
+
+i.fab.fa-github{
+    margin-left: 10px;
+}
+
+i.fas.fa-arrow-circle-right {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    #correct, #topscore { 
+margin-left: 0px;
+    }
+  }
 
