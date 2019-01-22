@@ -6,4 +6,4 @@ Created with React.js
 To create a React App from scratch, simply run `npx create-react-app <name of app>`
 
 ## Heroku Deployment
-[Play on Heroku]('https://bitmemory.herokuapp.com')
+[Play on Heroku](https://bitmemory.herokuapp.com)
